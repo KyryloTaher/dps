@@ -45,8 +45,8 @@ def fetch_all_item_ids(region="us", namespace="static-classic-us", locale="en_US
         params = {
             'namespace': namespace,
             'locale': locale,
-            'page': page,
-            'pageSize': page_size,
+            '_page': page,
+            '_pageSize': page_size,
             'orderby': 'id',
         }
         url = f'https://{region}.api.blizzard.com/data/wow/search/item'
