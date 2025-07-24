@@ -16,10 +16,16 @@ export BLIZZARD_CLIENT_ID="111c95f387d14e02b43c751d9187000d"
 export BLIZZARD_CLIENT_SECRET="0WbrQzxKQA5r3WgpiZwCqz85vD8lGDeH"
 ```
 
-Run the script:
+Run the script (by default it fetches Cataclysm Classic data):
 
 ```
 python3 fetch_items.py
 ```
 
-The script will create `items.db` containing an `items` table with all fetched item IDs.
+To fetch Classic Era data pass the Classic Era namespace:
+
+```
+python3 fetch_items.py --namespace static-classic1x-us
+```
+
+The script will create `items.db` (or the path you provide via `--db-path`) containing an `items` table with all fetched item IDs.
