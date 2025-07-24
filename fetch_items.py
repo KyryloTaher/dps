@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 import sqlite3
 
@@ -17,11 +18,29 @@ def get_access_token():
     return resp.json()['access_token']
 
 
-def fetch_all_item_ids(region='us', namespace='static-classic-us', locale='en_US', page_size=1000):
+def _auto_namespace(region: str, locale: str, token: str) -> str:
+    """Detect the full static namespace with patch version."""
+    url = f"https://{region}.api.blizzard.com/data/wow/item-class/index"
+    headers = {"Authorization": f"Bearer {token}"}
+    resp = requests.get(
+        url,
+        params={"namespace": "static-classic-us", "locale": locale},
+        headers=headers,
+        timeout=30,
+    )
+    resp.raise_for_status()
+    href = resp.json().get("_links", {}).get("self", {}).get("href", "")
+    match = re.search(r"namespace=([^&]+)", href)
+    return match.group(1) if match else "static-classic-us"
+
+
+def fetch_all_item_ids(region="us", namespace="static-classic-us", locale="en_US", page_size=1000):
     token = get_access_token()
+    if namespace == "static-classic-us":
+        namespace = _auto_namespace(region, locale, token)
     item_ids = []
     page = 1
-    headers = {'Authorization': f'Bearer {token}'}
+    headers = {"Authorization": f"Bearer {token}"}
     while True:
         params = {
             'namespace': namespace,
@@ -34,6 +53,9 @@ def fetch_all_item_ids(region='us', namespace='static-classic-us', locale='en_US
         resp = requests.get(url, params=params, headers=headers, timeout=30)
         resp.raise_for_status()
         data = resp.json()
+        if not data.get('results'):
+            print('Warning: no results returned for page', page)
+            break
         for result in data.get('results', []):
             item_id = result['data']['id']
             item_ids.append(item_id)
