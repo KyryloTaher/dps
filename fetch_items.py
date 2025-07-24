@@ -92,6 +92,10 @@ def main():
     ids = fetch_all_item_ids(
         region=args.region, namespace=args.namespace, locale=args.locale
     )
+
+    if ids:
+        print("Top 3 item IDs:", ids[:3])
+
     store_in_db(ids, db_path=args.db_path)
     print(f"Stored {len(ids)} items in the database.")
 
