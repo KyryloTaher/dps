@@ -1,31 +1,22 @@
-# DPS
+# DPS Calculator
 
-This repository contains a script to fetch all item IDs from the World of Warcraft Classic API and store them in a SQLite database.
+This repository contains a Python script to estimate Warrior DPS in World of Warcraft Classic Era. The script implements common attack table and damage formulas used in Classic.
 
 ## Requirements
 
 - Python 3
-- `requests` library (install with `pip install requests`)
 
 ## Usage
 
-Set the Blizzard API credentials as environment variables or edit them in `fetch_items.py`:
+Run `dps_calculator.py` with your character stats. For example:
 
-```
-export BLIZZARD_CLIENT_ID="111c95f387d14e02b43c751d9187000d"
-export BLIZZARD_CLIENT_SECRET="0WbrQzxKQA5r3WgpiZwCqz85vD8lGDeH"
-```
-
-Run the script (by default it fetches Cataclysm Classic data):
-
-```
-python3 fetch_items.py
+```bash
+python3 dps_calculator.py \
+  --base-damage-mh 100 \
+  --base-speed-mh 3.6 \
+  --attack-power 500 \
+  --hit 6 \
+  --crit 5
 ```
 
-To fetch Classic Era data pass the Classic Era namespace:
-
-```
-python3 fetch_items.py --namespace static-classic1x-us
-```
-
-The script will create `items.db` (or the path you provide via `--db-path`) containing an `items` table with all fetched item IDs.
+The script prints the estimated DPS based on the provided statistics.
