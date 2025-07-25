@@ -20,3 +20,13 @@ python3 dps_calculator.py \
 ```
 
 The script prints the estimated DPS based on the provided statistics.
+
+### Graphical Interface
+
+A simple Tkinter based GUI is available in `dps_gui.py`. Launch it with Python
+and fill in your character stats in the form. The result will be displayed in
+the window when you click **Calculate**:
+
+```bash
+python3 dps_gui.py
+```
