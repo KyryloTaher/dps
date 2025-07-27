@@ -61,3 +61,16 @@ def get_items(names: List[str], db_path: str = DB_PATH) -> List[Item]:
     for name, type_, level, stats_json in rows:
         items.append(Item(name=name, type=type_, required_level=level, stats=json.loads(stats_json)))
     return items
+
+
+def list_item_names(item_type: str | None = None, db_path: str = DB_PATH) -> List[str]:
+    """Return a list of item names, optionally filtered by type."""
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    if item_type is None:
+        c.execute("SELECT name FROM items")
+    else:
+        c.execute("SELECT name FROM items WHERE type = ?", (item_type,))
+    names = [row[0] for row in c.fetchall()]
+    conn.close()
+    return names
