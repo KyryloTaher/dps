@@ -17,6 +17,26 @@ STAT_KEYS: List[str] = [
     "impale",
 ]
 
+# Predefined item types for each equipment slot. These strings are used when
+# inserting items through the GUI so users can pick a slot from a drop-down
+# rather than typing it manually.
+ITEM_TYPES: List[str] = [
+    "Helm",
+    "Neck",
+    "Chest",
+    "Bracers",
+    "Hands",
+    "Belt",
+    "Legs",
+    "Boots",
+    "Ring",
+    "Trinket",
+    "Main Hand",
+    "Off Hand",
+    "Ranged",
+    "Ammo",
+]
+
 
 def parse_stat_pairs(pairs):
     stats = {}
