@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from typing import Dict
 from item_database import init_db, add_item, Item
+from item_manager import STAT_KEYS
 
 
 def init_db_action():
@@ -60,7 +61,12 @@ fields = [
 
 for i, (label, var) in enumerate(fields):
     ttk.Label(mainframe, text=label).grid(column=0, row=i, sticky=tk.W)
-    ttk.Entry(mainframe, textvariable=var, width=40).grid(column=1, row=i, sticky=(tk.W, tk.E))
+    if var is stat_key_var:
+        ttk.Combobox(mainframe, textvariable=var, values=STAT_KEYS, width=37).grid(
+            column=1, row=i, sticky=(tk.W, tk.E)
+        )
+    else:
+        ttk.Entry(mainframe, textvariable=var, width=40).grid(column=1, row=i, sticky=(tk.W, tk.E))
 
 stats_label = ttk.Label(mainframe, textvariable=stats_list_var)
 stats_label.grid(column=0, row=len(fields), columnspan=2, sticky=(tk.W))
