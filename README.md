@@ -35,8 +35,8 @@ GUIs are also provided for the item manager and for calculating DPS using items.
 
 Run `item_manager_gui.py` to initialize the database or insert items through a
 simple form, and `dps_with_items_gui.py` to calculate DPS using equipment from
-the database. The item manager GUI now provides a drop-down list of available
-stat keys for convenience.
+the database. The item manager GUI now provides a separate input field for each
+stat instead of a drop-down list.
 
 ```bash
 python3 item_manager_gui.py
