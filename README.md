@@ -45,15 +45,17 @@ python3 dps_with_items_gui.py
 ## Item Database
 
 Items can be stored in a small SQLite database. Use `item_manager.py` to
-initialize the database and insert items. Stats are provided as a JSON
-object where keys match the fields used in `WarriorStats` (e.g. `attack_power`,
-`hit`, `base_damage_mh`).
+initialize the database and insert items. Stats are provided as simple
+`key=value` pairs instead of a JSON blob for ease of use. Keys correspond to
+the fields used in `WarriorStats` (e.g. `attack_power`, `hit`,
+`base_damage_mh`).
 
 Create the database and add an item:
 
 ```bash
 python3 item_manager.py --init-db
-python3 item_manager.py --add "Fiery Axe" weapon_mh '{"base_damage_mh": 100, "base_speed_mh": 3.6}' 60
+python3 item_manager.py --add "Fiery Axe" weapon_mh 60 \
+  --stat base_damage_mh=100 --stat base_speed_mh=3.6
 ```
 
 Once items are stored you can perform DPS calculations using their stats with
