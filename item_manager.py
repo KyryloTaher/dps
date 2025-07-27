@@ -1,6 +1,18 @@
 import argparse
-import json
 from item_database import init_db, add_item, Item
+
+
+def parse_stat_pairs(pairs):
+    stats = {}
+    for pair in pairs:
+        if "=" not in pair:
+            raise argparse.ArgumentTypeError(f"Invalid stat format: {pair}")
+        key, value = pair.split("=", 1)
+        try:
+            stats[key] = float(value)
+        except ValueError:
+            raise argparse.ArgumentTypeError(f"Value for {key} must be numeric")
+    return stats
 
 
 def main() -> None:
@@ -8,9 +20,17 @@ def main() -> None:
     parser.add_argument("--init-db", action="store_true", help="Initialize database")
     parser.add_argument(
         "--add",
-        nargs=4,
-        metavar=("NAME", "TYPE", "STATS_JSON", "LEVEL"),
-        help="Add an item as JSON stats"
+        nargs=3,
+        metavar=("NAME", "TYPE", "LEVEL"),
+        help="Add an item with stats"
+    )
+    parser.add_argument(
+        "--stat",
+        dest="stats",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="Stat pair, may be used multiple times",
     )
 
     args = parser.parse_args()
@@ -20,8 +40,8 @@ def main() -> None:
         print("Database initialized")
 
     if args.add:
-        name, type_, stats_json, level = args.add
-        stats = json.loads(stats_json)
+        name, type_, level = args.add
+        stats = parse_stat_pairs(args.stats)
         add_item(Item(name=name, type=type_, required_level=int(level), stats=stats))
         print(f"Inserted {name}")
 
