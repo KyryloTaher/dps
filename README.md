@@ -35,7 +35,8 @@ GUIs are also provided for the item manager and for calculating DPS using items.
 
 Run `item_manager_gui.py` to initialize the database or insert items through a
 simple form, and `dps_with_items_gui.py` to calculate DPS using equipment from
-the database.
+the database. The item manager GUI now provides a drop-down list of available
+stat keys for convenience.
 
 ```bash
 python3 item_manager_gui.py
@@ -48,7 +49,8 @@ Items can be stored in a small SQLite database. Use `item_manager.py` to
 initialize the database and insert items. Stats are provided as simple
 `key=value` pairs instead of a JSON blob for ease of use. Keys correspond to
 the fields used in `WarriorStats` (e.g. `attack_power`, `hit`,
-`base_damage_mh`).
+`base_damage_mh`). Run `item_manager.py --list-stats` to see all supported
+stat keys.
 
 Create the database and add an item:
 
