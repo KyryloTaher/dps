@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from item_database import init_db, add_item, Item
-from item_manager import STAT_KEYS
+from item_manager import STAT_KEYS, ITEM_TYPES
 
 
 def init_db_action():
@@ -50,7 +50,14 @@ fields += [(key, stat_vars[key]) for key in STAT_KEYS]
 
 for i, (label, var) in enumerate(fields):
     ttk.Label(mainframe, text=label).grid(column=0, row=i, sticky=tk.W)
-    ttk.Entry(mainframe, textvariable=var, width=40).grid(column=1, row=i, sticky=(tk.W, tk.E))
+    if label == "Type":
+        ttk.Combobox(mainframe, textvariable=var, values=ITEM_TYPES, width=37).grid(
+            column=1, row=i, sticky=(tk.W, tk.E)
+        )
+    else:
+        ttk.Entry(mainframe, textvariable=var, width=40).grid(
+            column=1, row=i, sticky=(tk.W, tk.E)
+        )
 
 init_button = ttk.Button(mainframe, text="Initialize DB", command=init_db_action)
 init_button.grid(column=0, row=len(fields), pady=(5, 0))
