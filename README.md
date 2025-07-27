@@ -31,6 +31,17 @@ the window when you click **Calculate**:
 python3 dps_gui.py
 ```
 
+GUIs are also provided for the item manager and for calculating DPS using items.
+
+Run `item_manager_gui.py` to initialize the database or insert items through a
+simple form, and `dps_with_items_gui.py` to calculate DPS using equipment from
+the database.
+
+```bash
+python3 item_manager_gui.py
+python3 dps_with_items_gui.py
+```
+
 ## Item Database
 
 Items can be stored in a small SQLite database. Use `item_manager.py` to
