@@ -9,6 +9,8 @@ class WarriorStats:
     base_damage_mh: float
     base_speed_mh: float
     attack_power: float
+    strength: float = 0.0
+    agility: float = 0.0
     hit: float = 0.0
     spellbook_crit: float = 0.0
     aura_crit: float = 0.0

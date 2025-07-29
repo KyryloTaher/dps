@@ -18,7 +18,8 @@ def build_stats(args: argparse.Namespace) -> WarriorStats:
         "attack_power": 0,
         "hit": 0,
         "spellbook_crit": 0,
-        "aura_crit": 0,
+        "strength": 0,
+        "agility": 0,
         "base_damage_mh": 0,
         "base_speed_mh": 0,
         "base_damage_oh": 0,
@@ -31,7 +32,12 @@ def build_stats(args: argparse.Namespace) -> WarriorStats:
 
     for item in items:
         merge_stats(stats_dict, item.stats)
-
+    strength = stats_dict.pop("str", 0) + stats_dict.pop("strength", 0)
+    agility = stats_dict.pop("agi", 0) + stats_dict.pop("agility", 0)
+    stats_dict["strength"] = strength
+    stats_dict["agility"] = agility
+    stats_dict["attack_power"] += strength * 2
+    stats_dict["spellbook_crit"] += agility / 20
     return WarriorStats(**stats_dict)
 
 

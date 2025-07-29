@@ -49,8 +49,10 @@ Items can be stored in a small SQLite database. Use `item_manager.py` to
 initialize the database and insert items. Stats are provided as simple
 `key=value` pairs instead of a JSON blob for ease of use. Keys correspond to
 the fields used in `WarriorStats` (e.g. `attack_power`, `hit`,
-`base_damage_mh`). Run `item_manager.py --list-stats` to see all supported
-stat keys.
+`base_damage_mh`). Item stats may also include `str` and `agi`, which are
+automatically converted to attack power and crit chance. Run
+`item_manager.py --list-stats` to see all supported stat keys. Items can only
+provide `spellbook_crit` for critical strike chance.
 
 Create the database and add an item:
 
