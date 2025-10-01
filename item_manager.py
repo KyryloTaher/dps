@@ -14,8 +14,6 @@ STAT_KEYS: List[str] = [
     "base_speed_mh",
     "base_damage_oh",
     "base_speed_oh",
-    "dual_wield_spec",
-    "impale",
 ]
 
 # Predefined item types for each equipment slot. These strings are used when
