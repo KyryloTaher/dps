@@ -4,8 +4,13 @@ from item_database import get_items
 from dps_calculator import calculate_dps, WarriorStats
 
 
+IGNORED_ITEM_STATS = {"dual_wield_spec", "impale"}
+
+
 def merge_stats(base: Dict[str, float], item_stats: Dict[str, float]) -> None:
     for k, v in item_stats.items():
+        if k in IGNORED_ITEM_STATS:
+            continue
         base[k] = base.get(k, 0) + v
 
 
