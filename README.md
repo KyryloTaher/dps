@@ -23,25 +23,17 @@ The script prints the estimated DPS based on the provided statistics.
 
 ### Graphical Interface
 
-A simple Tkinter based GUI is available in `dps_gui.py`. Launch it with Python
-and fill in your character stats in the form. The result will be displayed in
-the window when you click **Calculate**:
+A unified Tkinter interface is available in `unified_gui.py`. It provides
+three tabs that cover manual DPS calculations, item-based simulations, and item
+database management from a single window:
 
 ```bash
-python3 dps_gui.py
+python3 unified_gui.py
 ```
 
-GUIs are also provided for the item manager and for calculating DPS using items.
-
-Run `item_manager_gui.py` to initialize the database or insert items through a
-simple form, and `dps_with_items_gui.py` to calculate DPS using equipment from
-the database. The item manager GUI now provides a separate input field for each
-stat instead of a drop-down list.
-
-```bash
-python3 item_manager_gui.py
-python3 dps_with_items_gui.py
-```
+The legacy standalone GUIs (`dps_gui.py`, `dps_with_items_gui.py`, and
+`item_manager_gui.py`) remain available if you prefer a focused tool for a
+specific task.
 
 ## Item Database
 
