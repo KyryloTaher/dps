@@ -33,12 +33,12 @@ The first tab lets you enter target information, ability modifiers and select
 your equipment. Press **Calculate** to compute DPS and populate the warrior
 skills table.
 
-The "Item Manager" tab provides controls to initialise the SQLite database,
-insert new items and define their stats. Supported stat keys include attack
+The "Item Manager" tab provides controls to initialise or delete the SQLite
+database, insert new items and define their stats. Supported stat keys include attack
 power, hit, crit, aura crit, weapon damage and ability modifiers such as block
 value, rage, improved cleave ranks and bonus execute rage. Strength and agility
 will automatically convert into the relevant derived stats when items are
 loaded.
 
-The database file (`items.db`) is created automatically in the project
-directory when you first run the application or press **Initialize DB**.
+The database file (`items.db`) is created in the project directory when you
+press **Initialize DB**.
