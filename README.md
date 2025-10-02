@@ -1,65 +1,44 @@
-# DPS Calculator
+# Warrior DPS Toolkit
 
-This repository contains a Python script to estimate Warrior DPS in World of Warcraft Classic Era. The script implements common attack table and damage formulas used in Classic.
+This project provides a single Tkinter application, `unified_gui.py`, that brings
+together every tool required to evaluate a Classic Era warrior. The legacy
+command line utilities and standalone GUIs have been removed so the entire
+workflow now lives in one window.
+
+The application supports three major tasks:
+
+1. **Equipment-based DPS** – Select items from the SQLite database to build your
+   character and evaluate white hit DPS. Supplemental inputs let you provide
+   rage, block value, improved cleave ranks and the normalized weapon speed so
+   the calculator can report damage for every major warrior ability.
+2. **Warrior skills breakdown** – After running a calculation the UI lists the
+   expected damage for Bloodthirst, Mortal Strike, Execute, Whirlwind, Slam and
+   every other yellow ability supported by the simulator.
+3. **Item management** – Items can be created, updated and stored directly from
+   the "Item Manager" tab without leaving the application.
 
 ## Requirements
 
 - Python 3
 
-## Usage
+## Running the application
 
-Run `dps_calculator.py` with your character stats. For example:
-
-```bash
-python3 dps_calculator.py \
-  --base-damage-mh 100 \
-  --base-speed-mh 3.6 \
-  --attack-power 500 \
-  --hit 6 \
-  --crit 5
-```
-
-The script prints the estimated DPS based on the provided statistics.
-
-### Graphical Interface
-
-A unified Tkinter interface is available in `unified_gui.py`. It provides
-three tabs that cover manual DPS calculations, item-based simulations, and item
-database management from a single window:
+Launch the Tkinter UI with:
 
 ```bash
 python3 unified_gui.py
 ```
 
-The legacy standalone GUIs (`dps_gui.py`, `dps_with_items_gui.py`, and
-`item_manager_gui.py`) remain available if you prefer a focused tool for a
-specific task.
+The first tab lets you enter target information, ability modifiers and select
+your equipment. Press **Calculate** to compute DPS and populate the warrior
+skills table.
 
-## Item Database
+The "Item Manager" tab provides controls to initialise the SQLite database,
+insert new items and define their stats. Supported stat keys include attack
+power, hit, crit, aura crit, weapon damage and ability modifiers such as block
+value, rage, improved cleave ranks and bonus execute rage. Strength and agility
+will automatically convert into the relevant derived stats when items are
+loaded.
 
-Items can be stored in a small SQLite database. Use `item_manager.py` to
-initialize the database and insert items. Stats are provided as simple
-`key=value` pairs instead of a JSON blob for ease of use. Keys correspond to
-the fields used in `WarriorStats` (e.g. `attack_power`, `hit`,
-`base_damage_mh`). Item stats may also include `str` and `agi`, which are
-automatically converted to attack power and crit chance. Run
-`item_manager.py --list-stats` to see all supported stat keys. Items can only
-provide `spellbook_crit` for critical strike chance.
-
-Create the database and add an item:
-
-```bash
-python3 item_manager.py --init-db
-python3 item_manager.py --add "Fiery Axe" weapon_mh 60 \
-  --stat base_damage_mh=100 --stat base_speed_mh=3.6
-```
-
-Once items are stored you can perform DPS calculations using their stats with
-`dps_with_items.py`:
-
-```bash
-python3 dps_with_items.py --items "Fiery Axe" --weapon-skill 300
-```
-
-This script loads the specified items, merges their stats and passes them to
-`dps_calculator.py`.
+The database file (`items.db`) is created automatically in the project
+directory when you first run the application or press **Initialize DB**.
