@@ -9,6 +9,7 @@ entry point.
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 import tkinter as tk
 from dataclasses import dataclass
@@ -76,9 +77,21 @@ def init_db(db_path: str = DB_PATH) -> None:
     conn.close()
 
 
+def delete_db(db_path: str = DB_PATH) -> bool:
+    """Delete the SQLite database file if it exists."""
+
+    try:
+        os.remove(db_path)
+    except FileNotFoundError:
+        return False
+    return True
+
+
 def add_item(item: Item, db_path: str = DB_PATH) -> None:
     """Insert or update an item in the database."""
 
+    if not os.path.exists(db_path):
+        raise sqlite3.OperationalError("database not initialised")
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute(
@@ -92,12 +105,20 @@ def add_item(item: Item, db_path: str = DB_PATH) -> None:
 def list_item_names(item_type: str | None = None, db_path: str = DB_PATH) -> List[str]:
     """Return all item names, optionally filtered by type."""
 
+    if not os.path.exists(db_path):
+        return []
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    if item_type is None:
-        cursor.execute("SELECT name FROM items ORDER BY name")
-    else:
-        cursor.execute("SELECT name FROM items WHERE type = ? ORDER BY name", (item_type,))
+    try:
+        if item_type is None:
+            cursor.execute("SELECT name FROM items ORDER BY name")
+        else:
+            cursor.execute("SELECT name FROM items WHERE type = ? ORDER BY name", (item_type,))
+    except sqlite3.OperationalError as exc:
+        conn.close()
+        if "no such table" in str(exc).lower():
+            return []
+        raise
     names = [row[0] for row in cursor.fetchall()]
     conn.close()
     return names
@@ -109,14 +130,22 @@ def get_items(names: Iterable[str], db_path: str = DB_PATH) -> List[Item]:
     names = [name for name in names if name]
     if not names:
         return []
+    if not os.path.exists(db_path):
+        return []
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     placeholders = ",".join("?" for _ in names)
-    cursor.execute(
-        f"SELECT name, type, required_level, stats FROM items WHERE name IN ({placeholders})",
-        names,
-    )
-    rows = cursor.fetchall()
+    try:
+        cursor.execute(
+            f"SELECT name, type, required_level, stats FROM items WHERE name IN ({placeholders})",
+            names,
+        )
+        rows = cursor.fetchall()
+    except sqlite3.OperationalError as exc:
+        conn.close()
+        if "no such table" in str(exc).lower():
+            return []
+        raise
     conn.close()
     items = []
     for name, type_, level, stats_json in rows:
@@ -395,8 +424,6 @@ class UnifiedApp:
         self.root = root
         self.root.title("Warrior DPS Toolkit")
 
-        init_db()
-
         self.notebook = ttk.Notebook(root)
         self.notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -590,6 +617,9 @@ class UnifiedApp:
         init_button = ttk.Button(frame, text="Initialize DB", command=self._init_db_clicked)
         init_button.grid(column=0, row=start_row + len(STAT_KEYS), pady=(6, 0), sticky=tk.W)
 
+        delete_button = ttk.Button(frame, text="Delete DB", command=self._delete_db_clicked)
+        delete_button.grid(column=0, row=start_row + len(STAT_KEYS) + 1, pady=(4, 0), sticky=tk.W)
+
         add_button = ttk.Button(
             frame,
             text="Add Item",
@@ -606,6 +636,19 @@ class UnifiedApp:
     def _init_db_clicked(self) -> None:
         init_db()
         messagebox.showinfo("Database", "Database initialized")
+        self.refresh_items()
+
+    def _delete_db_clicked(self) -> None:
+        try:
+            removed = delete_db()
+        except Exception as exc:
+            messagebox.showerror("Database", f"Could not delete database: {exc}")
+            return
+
+        if removed:
+            messagebox.showinfo("Database", "Database deleted")
+        else:
+            messagebox.showinfo("Database", "No database file was found")
         self.refresh_items()
 
     def _add_item_clicked(
@@ -628,6 +671,9 @@ class UnifiedApp:
             add_item(Item(name=name, type=type_, required_level=level, stats=stats))
         except ValueError:
             messagebox.showerror("Error", "Level and stats must be numeric")
+            return
+        except sqlite3.OperationalError:
+            messagebox.showerror("Error", "Database is not initialised. Click 'Initialize DB' first.")
             return
         except Exception as exc:
             messagebox.showerror("Error", str(exc))
